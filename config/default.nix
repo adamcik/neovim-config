@@ -19,6 +19,9 @@
     ./ai.nix
   ];
 
+  viAlias = true;
+  vimAlias = true;
+
   extraPackages = with pkgs; [
     fd
     fzf
