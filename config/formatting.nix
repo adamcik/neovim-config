@@ -66,7 +66,7 @@
             if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
               return
             end
-            return { timeout_ms = 500, lsp_format = "fallback", formatters = { "injected" } }
+            return { timeout_ms = 500, lsp_format = "fallback" }
           end
         '';
 
@@ -86,13 +86,13 @@
           python = ["ruff_fix" "ruff_format"];
           bash = ["shfmt"];
           caddy = ["caddy"];
-          nix = ["alejandra"];
+          nix = ["alejandra" "injected"];
 
           yaml = ["yamlfmt"];
           "yaml.github" = ["yamlfmt"];
           "yaml.dockercompose" = ["yamlfmt"];
 
-          markdown = mkStopAfterFirst ["mdformat" "prettierd" "prettier"];
+          markdown = ["mdformat" "injected"];
 
           toml = ["taplo"];
           "toml.pyproject" = mkStopAfterFirst ["pyproject_fmt" "taplo"];
