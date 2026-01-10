@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Connect tailscale
-        uses: tailscale/github-action@v4
+        uses: tailscale/github-action@53acf823325fe9ca47f4cdaa951f90b4b0de5bb9 # v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           audience: ${{ secrets.TS_AUDIENCE }}
@@ -32,7 +32,7 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3
 
       - name: Setup Attic
-        uses: ryanccn/attic-action@v0
+        uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0
         with:
           endpoint: https://attic.vulture-butterfly.ts.net
           cache: cache
