@@ -11,6 +11,15 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
+  nixConfig = {
+    substituters = [
+      "https://attic.vulture-butterfly.ts.net/cache"
+    ];
+    trusted-public-keys = [
+      "cache:QaaJuPNE5tHSEg3L8KW98QnZiG6YNFN8qIbpoae83S0="
+    ];
+  };
+
   outputs = inputs @ {
     nixvim,
     flake-parts,
