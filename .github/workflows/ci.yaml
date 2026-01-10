@@ -11,10 +11,38 @@ on:
 
 jobs:
   check:
+    permissions:
+      id-token: write
+      contents: read
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3.15.1
-      - uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
-      - name: Run all checks and builds
-        run: nix flake check
+      - name: Connect to tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:ci
+
+      - name: Checkout repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - name: Install nix
+        uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3
+
+      - name: Login to attic
+        run: |
+          nix run github:NixOS/nixpkgs/nixpkgs-unstable#attic-client -- \
+            login \
+            --set-default \
+            cache \
+            https://attic.vulture-butterfly.ts.net/ \
+            "${{ secrets.ATTIC_TOKEN }}"
+
+      - name: Build with nix-fast-build
+        run: |
+          nix run github:NixOS/nixpkgs/nixpkgs-unstable#nix-fast-build -- \
+            --no-nom \
+            --skip-cached \
+            --attic-cache cache
