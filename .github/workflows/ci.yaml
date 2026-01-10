@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to tailscale
+      - name: Connect tailscale
         uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
@@ -31,24 +31,14 @@ jobs:
       - name: Install nix
         uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3
 
-      - name: Login to attic
-        run: |
-          nix run github:NixOS/nixpkgs/nixpkgs-unstable#attic-client -- \
-            login \
-            --set-default \
-            cache \
-            https://attic.vulture-butterfly.ts.net/ \
-            "${{ secrets.ATTIC_TOKEN }}"
+      - name: Setup Attic
+        uses: ryanccn/attic-action@v0
+        with:
+          endpoint: https://attic.vulture-butterfly.ts.net
+          cache: cache
+          token: ${{ secrets.ATTIC_TOKEN }}
 
-      - name: Use attic
-        run: |
-          nix run github:NixOS/nixpkgs/nixpkgs-unstable#attic-client -- \
-            use \
-            cache \
-
-      - name: Build with nix-fast-build
+      - name: Build nix-fast-build
         run: |
           nix run github:NixOS/nixpkgs/nixpkgs-unstable#nix-fast-build -- \
-            --no-nom \
-            --skip-cached \
-            --attic-cache cache
+            --no-nom --skip-cached
