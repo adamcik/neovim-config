@@ -40,6 +40,12 @@ jobs:
             https://attic.vulture-butterfly.ts.net/ \
             "${{ secrets.ATTIC_TOKEN }}"
 
+      - name: Use attic
+        run: |
+          nix run github:NixOS/nixpkgs/nixpkgs-unstable#attic-client -- \
+            use \
+            cache \
+
       - name: Build with nix-fast-build
         run: |
           nix run github:NixOS/nixpkgs/nixpkgs-unstable#nix-fast-build -- \
